@@ -9,11 +9,15 @@ const editButton = document.getElementById("edit-username-button");
 const messageInput = document.getElementById("new-message");
 const sendButton = document.getElementById("send-button");
 const messages = document.getElementById("messages");
+const reloadButton = document.getElementById("reload");
 
 // Add a click handlers to global buttons
 sendButton.onclick = sendMessage;
 editButton.onclick = editUsername;
+reloadButton.onclick = getAllMessages;
 
+setInterval (function(){getAllMessages();}, 5000);
+let latest = ;
 /*******************************************
 * Create a new message item:
 *
@@ -52,7 +56,21 @@ function createNewMessage(messageObj) {
 * - Don't forget to clear the message input.
 *****************************************************/
 function sendMessage() {
-  // Complete me!
+
+  let messageObj = {
+    username: usernameInput.value,
+    message: messageInput.value
+  };
+  
+  axios.post('http://192.168.100.54/messages/create/', {username: messageObj.username, message: messageObj.message})
+    .then(response => {
+        createNewMessage(messageObj);
+    })
+    .then(response => {
+        messageInput.value = '';
+    })
+    .catch(error => console.error(error));
+
 };
 
 
@@ -67,7 +85,24 @@ function sendMessage() {
 *		(you can use createNewMessage to do this)
 *****************************************************/
 function getAllMessages() {
-  // Complete me!
+  console.log("Hi");
+  
+  axios.get('http://192.168.100.54/messages/?latest=2018-04-02T16:18:06.309254Z')
+    .then(response => response.data)
+    .then(data => {
+        console.log(data);
+        messages.innerHTML = "";
+        return data;
+     })
+    .then(data => {
+        data.forEach(function(data){
+        createNewMessage(data)});
+          // [{title: 'Hello AJAX', published: true}, {title: 'Benefits of Machboos' ....
+     })
+
+    .catch(error => console.error(error));
+
+
 };
 
 
