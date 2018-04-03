@@ -12,6 +12,10 @@ const messages = document.getElementById("messages");
 const reloadButton = document.getElementById("reload");
 
 // Add a click handlers to global buttons
+ var ts = new Date();
+console.log(ts.toISOString());
+var time=ts.toISOString();
+
 sendButton.onclick = sendMessage;
 editButton.onclick = editUsername;
 reloadButton.onclick = getAllMessages;
@@ -62,13 +66,18 @@ function sendMessage() {
     username: usernameInput.value,
     message: messageInput.value
   };
-  
+ var ts = new Date();
+console.log(ts.toISOString());
+ time=ts.toISOString();
   axios.post('http://127.0.0.1:8000/messages/create/', {username: messageObj.username, message: messageObj.message})
     .then(response => {
         createNewMessage(messageObj);
     })
     .then(response => {
         messageInput.value = '';
+    })
+    .then(response => {
+        getAllMessages();
     })
     .catch(error => console.error(error));
 
@@ -87,7 +96,7 @@ function sendMessage() {
 *****************************************************/
 function getAllMessages() {
   
-  axios.get('http://127.0.0.1:8000/messages/?latest=2018-04-02T21:24:10.803748Z')
+  axios.get('http://127.0.0.1:8000/messages/?latest='+time)
     .then(response => response.data)
     .then(data => {
         console.log(data);
@@ -97,6 +106,7 @@ function getAllMessages() {
     .then(data => {
         data.forEach(function(data){
         createNewMessage(data); 
+
         return (data.timestamp);});
         
           // [{title: 'Hello AJAX', published: true}, {title: 'Benefits of Machboos' ....
