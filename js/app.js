@@ -17,7 +17,8 @@ editButton.onclick = editUsername;
 reloadButton.onclick = getAllMessages;
 
 setInterval (function(){getAllMessages();}, 5000);
-let latest = ;
+let latest = getAllMessages();
+console.log(latest);
 /*******************************************
 * Create a new message item:
 *
@@ -62,7 +63,7 @@ function sendMessage() {
     message: messageInput.value
   };
   
-  axios.post('http://192.168.100.54/messages/create/', {username: messageObj.username, message: messageObj.message})
+  axios.post('http://127.0.0.1:8000/messages/create/', {username: messageObj.username, message: messageObj.message})
     .then(response => {
         createNewMessage(messageObj);
     })
@@ -85,9 +86,8 @@ function sendMessage() {
 *		(you can use createNewMessage to do this)
 *****************************************************/
 function getAllMessages() {
-  console.log("Hi");
   
-  axios.get('http://192.168.100.54/messages/?latest=2018-04-02T16:18:06.309254Z')
+  axios.get('http://127.0.0.1:8000/messages/?latest=2018-04-02T21:24:10.803748Z')
     .then(response => response.data)
     .then(data => {
         console.log(data);
@@ -96,13 +96,12 @@ function getAllMessages() {
      })
     .then(data => {
         data.forEach(function(data){
-        createNewMessage(data)});
+        createNewMessage(data); 
+        return (data.timestamp);});
+        
           // [{title: 'Hello AJAX', published: true}, {title: 'Benefits of Machboos' ....
      })
-
-    .catch(error => console.error(error));
-
-
+    .catch(error => console.error("error"));
 };
 
 
